@@ -23,8 +23,22 @@ export function getTask(id) {
   });
 }
 
+export function getCategory(id) {
+  return Category.find({
+    where: {id: id}
+  });
+}
+
 export function createCategory(data) {
   return Category.create({name: data.name});
+}
+
+export function editCategory(data) {
+  return Category.update({
+    name: data.name
+  }, {
+    where: {id: data.id}
+  });
 }
 
 export function deleteCategory(id) {
@@ -37,7 +51,6 @@ export function deleteCategory(id) {
       for(let i in tasks) {
         ids.push(tasks[i].id);
       }
-      console.log(ids);
      return  Task.destroy({
         where: {
           id: {
@@ -81,7 +94,6 @@ export function createTask(data) {
 }
 
 export function editTask(data) {
-  console.log(data);
   return Task.update({
     name: data.name,
     CategoryId: data.categoryId,

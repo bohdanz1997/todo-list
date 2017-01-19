@@ -2,11 +2,11 @@ import React from "react";
 
 import Category from "./Category.jsx";
 import CreateCategory from "./CreateCategory.jsx";
+import EditCategory from "./EditCategory.jsx";
 
-import Button from "react-bootstrap/lib/Button";
-import Modal from "react-bootstrap/lib/Modal";
-import ListGroup from "react-bootstrap/lib/ListGroup";
-import ListGroupItem from "react-bootstrap/lib/ListGroupItem";
+import { Button, Modal, ListGroup, ListGroupItem, Col } from "react-bootstrap/lib";
+
+import axios from "../api";
 
 class CategoriesList extends React.Component {
   constructor() {
@@ -14,19 +14,36 @@ class CategoriesList extends React.Component {
 
     this.openCreateModal = this.openCreateModal.bind(this);
     this.closeCreateModal = this.closeCreateModal.bind(this);
+    this.openEditModal = this.openEditModal.bind(this);
+    this.closeEditModal = this.closeEditModal.bind(this);
     this.handleCategoryAdd = this.handleCategoryAdd.bind(this);
+    this.handleCategoryEditClick = this.handleCategoryEditClick.bind(this);
+    this.handleCategoryEdit = this.handleCategoryEdit.bind(this);
 
     this.state = {
-      showCreateModal: false
+      showCreateModal: false,
+      showEditModal: false,
+      categoryDataForEdit: {
+        id: 0,
+        name: ""
+      }
     }
   }
 
   openCreateModal() {
-      this.setState({ showCreateModal: true });
+    this.setState({ showCreateModal: true });
   }
 
   closeCreateModal() {
-      this.setState({ showCreateModal: false });
+    this.setState({ showCreateModal: false });
+  }
+
+  openEditModal() {
+    this.setState({ showEditModal: true });
+  }
+
+  closeEditModal() {
+    this.setState({ showEditModal: false });
   }
 
   handleCategoryAdd(data) {
@@ -34,48 +51,79 @@ class CategoriesList extends React.Component {
     this.props.onCategoryAdd(data);
   }
 
+  handleCategoryEditClick(data) {
+    axios.getCategory(data.attributes.getNamedItem('data-id').value)
+    .then(data => {
+      this.setState({ categoryDataForEdit: data.data });
+      this.openEditModal();
+    });
+  }
+
+  handleCategoryEdit(data) {
+    this.closeEditModal();
+    this.props.onCategoryEdit(data);
+  }
+
+  renderPanelHead() {
+    return (
+      <div className="panel-heading lead clearfix">
+        Categories
+          <Button
+              className="pull-right"
+              bsStyle="success"
+              onClick={this.openCreateModal}>
+            Create New Category
+          </Button>
+      </div>
+    );
+  }
+
+  renderPanelBody() {
+    return (
+      <div className="panel-body">
+        <ListGroup>
+          <Category
+            name="All"
+            key={0}
+            id={0}
+            activeCategoryId={this.props.activeCategoryId}
+            tasksCount={this.props.data.tasks.length}
+            onCategoryClick={this.props.onCategoryClick} />
+          {
+            this.props.data.categories.map(cat =>
+              <Category
+                name={cat.name}
+                key={cat.id}
+                id={cat.id}
+                activeCategoryId={this.props.activeCategoryId}
+                tasksCount={cat.tasks.length}
+                onCategoryClick={this.props.onCategoryClick}
+                onEdit={this.handleCategoryEditClick}
+                onDelete={this.props.onCategoryDelete} />
+            )
+          }
+      </ListGroup>
+      </div>
+    );
+  }
+
   render() {
     return (
-      <div className="col-xs-12 col-sm-6">
+      <Col xs={12} sm={6}>
         <div className="panel panel-default">
-          <div className="panel-heading lead clearfix">
-            Categories
-              <Button
-                  className="pull-right"
-                  bsStyle="success"
-                  onClick={this.openCreateModal}>
-                Create New Category
-              </Button>
-          </div>
-          <div className="panel-body">
-            <ListGroup>
-            <Category
-              name="All"
-              key={0}
-              id={0}
-              activeCategoryId={this.props.activeCategoryId}
-              tasksCount={this.props.data.tasks.length}
-              onCategoryClick={this.props.onCategoryClick} />
-            {
-              this.props.data.categories.map(cat =>
-                <Category
-                  name={cat.name}
-                  key={cat.id}
-                  id={cat.id}
-                  activeCategoryId={this.props.activeCategoryId}
-                  tasksCount={cat.tasks.length}
-                  onCategoryClick={this.props.onCategoryClick}
-                  onDelete={this.props.onCategoryDelete.bind(null, cat)} />
-              )
-            }
-          </ListGroup>
-          </div>
+          {this.renderPanelHead()}
+          {this.renderPanelBody()}
         </div>
           <CreateCategory
             onCategoryAdd={this.handleCategoryAdd}
             showModal={this.state.showCreateModal}
             onClose={this.closeCreateModal} />
-      </div>
+          <EditCategory
+            categoryData={this.state.categoryDataForEdit}
+            onCategoryEdit={this.handleCategoryEdit}
+            showModal={this.state.showEditModal}
+            onClose={this.closeEditModal} />
+      </Col>
     );
   }
 }

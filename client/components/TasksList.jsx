@@ -4,8 +4,7 @@ import Task from "./Task.jsx";
 import CreateTask from "./CreateTask.jsx";
 import EditTask from "./EditTask.jsx";
 
-import Button from "react-bootstrap/lib/Button";
-import Modal from "react-bootstrap/lib/Modal";
+import { Button, Modal, Col } from "react-bootstrap/lib";
 
 import axios from "../api";
 
@@ -78,38 +77,50 @@ class TasksList extends React.Component {
     this.props.onTaskEdit(data);
   }
 
-  render() {
+  renderPanelHead() {
+    return(
+      <div className="panel-heading lead clearfix">
+        Tasks
+        <Button
+            className="pull-right"
+            bsStyle="success"
+            onClick={this.handleTaskAddClick}>
+          Create New Task
+        </Button>
+      </div>
+    );
+  }
+
+  renderPanelBody() {
     const tasks = this.props.activeCategoryId === 0
       ? this.props.data.tasks
       : this.props.data.tasks
         .filter(t => t.categoryId === this.props.activeCategoryId);
+    return(
+      <div className="panel-body">
+        <ul className="todo-list ui-sortable">
+          {
+            tasks.map(task =>
+              <Task
+                key={task.id}
+                taskData={task}
+                priorities={this.props.data.priorities}
+                onCheckedChange={this.props.onTaskStatusChange.bind(this, task)}
+                onTaskEdit={this.handleTaskEditClick}
+                onDelete={this.props.onTaskDelete.bind(this, task)} />
+            )
+          }
+        </ul>
+      </div>
+    );
+  }
+
+  render() {
     return (
-      <div className="col-xs-12 col-sm-6">
+      <Col xs={12} sm={6}>
         <div className="panel panel-default">
-          <div className="panel-heading lead clearfix">
-            Tasks
-            <Button
-                className="pull-right"
-                bsStyle="success"
-                onClick={this.handleTaskAddClick}>
-              Create New Task
-            </Button>
-          </div>
-          <div className="panel-body">
-            <ul className="todo-list ui-sortable">
-              {
-                tasks.map(task =>
-                  <Task
-                    key={task.id}
-                    taskData={task}
-                    priorities={this.props.data.priorities}
-                    onTaskEdit={this.handleTaskEditClick}
-                    onCheckedChange={this.props.onTaskStatusChange.bind(this, task)}
-                    onDelete={this.props.onTaskDelete.bind(this, task)} />
-                )
-              }
-            </ul>
-          </div>
+          {this.renderPanelHead()}
+          {this.renderPanelBody()}
         </div>
         <CreateTask
           activeCategoryId={this.props.activeCategoryId}
@@ -125,7 +136,7 @@ class TasksList extends React.Component {
           onTaskEdit={this.handleTaskEdit}
           showModal={this.state.showEditModal}
           onClose={this.closeEditModal} />
-      </div>
+      </Col>
     );
   }
 }

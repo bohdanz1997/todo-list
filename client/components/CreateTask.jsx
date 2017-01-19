@@ -1,35 +1,52 @@
 import React from "react";
-import Button from "react-bootstrap/lib/Button";
-import ModalDialog from "./ModalDialog.jsx";
+
+import TaskModal from "./TaskModal.jsx";
 
 class CreateTask extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      name: "",
-      categoryId: 0,
-      priorityId: 1
-    };
+  constructor(props) {
+    super(props);
+
     this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCategoryChange = this.handleCategoryChange.bind(this);
     this.handlePriorityChange = this.handlePriorityChange.bind(this);
     this.handleTaskAdd = this.handleTaskAdd.bind(this);
+
+    this.state = {
+      id: 0,
+      name: "",
+      categoryId: 0,
+      priorityId: 1
+    };
   }
 
-  handleNameChange(e) {
-    this.setState({ name: e.target.value });
+  changeStateFromProps() {
+    if (this.props.activeCategoryId == 0) {
+      this.setState({
+        categoryId: this.props.categories[0].id
+      });
+    }
+    else {
+      this.setState({
+        categoryId: this.props.activeCategoryId
+      });
+    }
   }
 
-  handleCategoryChange(e) {
-    this.setState({ categoryId: e.target.value });
+  handleNameChange(value) {
+    this.setState({ name: value });
   }
 
-  handlePriorityChange(e) {
-    this.setState({ priorityId: e.target.value });
+  handleCategoryChange(value) {
+    this.setState({ categoryId: value });
+  }
+
+  handlePriorityChange(value) {
+    this.setState({ priorityId: value });
   }
 
   handleTaskAdd() {
     const newTask = {
+      id: this.state.id,
       name: this.state.name,
       categoryId: this.state.categoryId,
       priorityId: this.state.priorityId
@@ -48,60 +65,21 @@ class CreateTask extends React.Component {
     }
   }
 
-  changeStateFromProps() {
-    this.setState({
-      categoryId: this.props.activeCategoryId
-    });
-  }
-
   render() {
     return (
       <div>
-        <ModalDialog
-          show={this.props.showModal}
-          onHide={this.props.onClose}
-          onClick={this.handleTaskAdd}
+        <TaskModal
           title="Create New Task"
-          >
-          <form>
-            <div className="form-group">
-              <label>Task</label>
-              <input
-                type="text"
-                onChange={this.handleNameChange}
-                className="form-control"
-                placeholder="Task" />
-            </div>
-            <div className="form-group">
-              <label>Category</label>
-              <select value={this.state.categoryId}
-                onChange={this.handleCategoryChange}
-                className="form-control">
-                {
-                  this.props.categories.map(cat =>
-                    <option value={cat.id} key={cat.id}>
-                      {cat.name}
-                    </option>
-                  )
-                }
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Priority</label>
-              <select value={this.state.priorityId}
-                onChange={this.handlePriorityChange}
-                className="form-control">
-                {
-                  this.props.priorities.map(pr =>
-                    <option value={pr.id} key={pr.id}>
-                      {pr.name}
-                    </option>
-                  )
-                }
-              </select>
-            </div>
-          </form>
-        </ModalDialog>
+          showModal={this.props.showModal}
+          taskData={this.state}
+          categories={this.props.categories}
+          priorities={this.props.priorities}
+          onClick={this.handleTaskAdd}
+          onClose={this.props.onClose}
+          onNameChange={this.handleNameChange}
+          onCategoryChange={this.handleCategoryChange}
+          onPriorityChange={this.handlePriorityChange}
+        />
       </div>
     );
   }

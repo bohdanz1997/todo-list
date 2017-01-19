@@ -38,9 +38,10 @@ const TasksActions = {
 
   editTask(task) {
     api.editTask(task)
-    .then(() =>
-      this.loadTasks()
-    )
+    .then(() => {
+      this.loadTasks();
+      CategoriesActions.loadCategories();
+    })
     .catch(err =>
       console.error(err)
     );

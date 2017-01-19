@@ -1,20 +1,21 @@
 import React from "react";
-import Modal from "react-bootstrap/lib/Modal";
-import Button from "react-bootstrap/lib/Button";
-import ModalDialog from "./ModalDialog.jsx";
+
+import CategoryModal from "./CategoryModal.jsx";
 
 class CreateCategory extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
     this.state = {
       name: ""
     };
-    this.handleTextChange = this.handleTextChange.bind(this);
+
+    this.handleNameChange = this.handleNameChange.bind(this);
     this.handleCategoryAdd = this.handleCategoryAdd.bind(this);
   }
 
-  handleTextChange(e) {
-    this.setState({name: e.target.value});
+  handleNameChange(value) {
+    this.setState({name: value});
   }
 
   handleCategoryAdd() {
@@ -23,26 +24,21 @@ class CreateCategory extends React.Component {
     };
 
     this.props.onCategoryAdd(newCategory);
-    this.setState({name: ""});
+
+    this.setState({ name: "" });
   }
 
   render() {
     return (
       <div>
-        <ModalDialog show={this.props.showModal}
-          onHide={this.props.onClose}
+        <CategoryModal
+          title="Create New Category"
+          showModal={this.props.showModal}
+          categoryData={this.state}
           onClick={this.handleCategoryAdd}
-          title="Create New Category">
-          <form>
-            <div className="form-group">
-              <label>List Name</label>
-              <input type="text"
-                onChange={this.handleTextChange}
-                className="form-control"
-                placeholder="List Name"/>
-            </div>
-          </form>
-        </ModalDialog>
+          onClose={this.props.onClose}
+          onNameChange={this.handleNameChange}
+        />
       </div>
     );
   }

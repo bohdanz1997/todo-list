@@ -33,9 +33,10 @@ class Task extends React.Component {
   renderActionsSection() {
     return (
       <div className="tools">
-        <i data-id={this.props.taskData.id} className="glyphicon glyphicon-pencil"
+        <i data-id={this.props.taskData.id}
+          className="glyphicon glyphicon-pencil"
           onClick={this.handleEditClick}></i>
-        <i className="glyphicon glyphicon-trash"
+        <i className="glyphicon glyphicon-remove-circle"
           onClick={this.props.onDelete}></i>
       </div>
     );
@@ -43,7 +44,10 @@ class Task extends React.Component {
 
   render() {
     return (
-      <li className={this.props.taskData.isDone ? "done" : ""} key={this.props.key}>
+      <li onMouseEnter={this.handleMouseEnter}
+        onMouseLeave={this.handleMouseLeave}
+        className={this.props.taskData.isDone ? "done" : ""}
+        key={this.props.key}>
         {this.renderTaskSection()}
         {this.renderActionsSection()}
       </li>

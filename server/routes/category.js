@@ -7,8 +7,16 @@ routerCategory.get('/', (req, res) => {
   db.listCategories().then(data => res.send(data));
 });
 
+routerCategory.get("/:id", (req, res) => {
+  db.getCategory(req.params.id).then(data => res.send(data));
+});
+
 routerCategory.post("/", (req, res) => {
   db.createCategory(req.body).then(data => res.send(data));
+});
+
+routerCategory.post("/edit", (req, res) => {
+  db.editCategory(req.body).then(data => res.send(data));
 });
 
 routerCategory.delete("/:id", (req, res) => {

@@ -12,6 +12,10 @@ export default {
     return axios.post(`${apiPrefix}/category`, data);
   },
 
+  editCategory(data) {
+    return axios.post(`${apiPrefix}/category/edit`, data);
+  },
+
   deleteCategory(categoryId) {
     return axios.delete(`${apiPrefix}/category/${categoryId}`);
   },
@@ -22,6 +26,10 @@ export default {
 
   getTask(id) {
     return axios.get(`${apiPrefix}/task/${id}`);
+  },
+
+  getCategory(id) {
+    return axios.get(`${apiPrefix}/category/${id}`);
   },
 
   createTask(data) {

@@ -36,6 +36,16 @@ const CategoriesActions = {
         );
     },
 
+    editCategory(cat) {
+      api.editCategory(cat)
+      .then(() =>
+        this.loadCategories()
+      )
+      .catch(err =>
+        console.error(err)
+      );
+    },
+
     deleteCategory(categoryId) {
       AppDispatcher.dispatch({
           type: Constants.DELETE_CATEGORIES_REQUEST

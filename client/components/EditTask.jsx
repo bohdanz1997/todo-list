@@ -1,6 +1,6 @@
 import React from "react";
-import Button from "react-bootstrap/lib/Button";
-import ModalDialog from "./ModalDialog.jsx";
+
+import TaskModal from "./TaskModal.jsx";
 
 class EditTask extends React.Component {
   constructor(props) {
@@ -28,16 +28,16 @@ class EditTask extends React.Component {
     });
   }
 
-  handleNameChange(e) {
-    this.setState({ name: e.target.value });
+  handleNameChange(value) {
+    this.setState({ name: value });
   }
 
-  handleCategoryChange(e) {
-    this.setState({ categoryId: e.target.value });
+  handleCategoryChange(value) {
+    this.setState({ categoryId: value });
   }
 
-  handlePriorityChange(e) {
-    this.setState({ priorityId: e.target.value });
+  handlePriorityChange(value) {
+    this.setState({ priorityId: value });
   }
 
   handleTaskEdit() {
@@ -67,54 +67,18 @@ class EditTask extends React.Component {
   render() {
     return (
       <div>
-        <ModalDialog
-          show={this.props.showModal}
-          onHide={this.props.onClose}
+        <TaskModal
+          title="Edit Task"
+          showModal={this.props.showModal}
+          taskData={this.state}
+          categories={this.props.categories}
+          priorities={this.props.priorities}
           onClick={this.handleTaskEdit}
-          title="Edit Task">
-          <form>
-            <div className="form-group">
-              <label>Task</label>
-              <input
-                type="text"
-                defaultValue={this.props.taskData.name}
-                onChange={this.handleNameChange}
-                className="form-control"
-                placeholder="Task" />
-            </div>
-            <div className="form-group">
-              <label>Category</label>
-              <select value={this.state.categoryId}
-                onChange={this.handleCategoryChange}
-                className="form-control">
-                {
-                  this.props.categories.map(cat =>
-                    <option value={cat.id} key={cat.id}>
-                      {cat.name}
-                    </option>
-                  )
-                }
-              </select>
-            </div>
-            <div className="form-group">
-              <label>Priority</label>
-              <select
-                value={this.state.priorityId}
-                onChange={this.handlePriorityChange}
-                className="form-control">
-                {
-                  this.props.priorities.map(pr =>
-                    <option
-                      value={pr.id}
-                      key={pr.id}>
-                      {pr.name}
-                    </option>
-                  )
-                }
-              </select>
-            </div>
-          </form>
-        </ModalDialog>
+          onClose={this.props.onClose}
+          onNameChange={this.handleNameChange}
+          onCategoryChange={this.handleCategoryChange}
+          onPriorityChange={this.handlePriorityChange}
+        />
       </div>
     );
   }
