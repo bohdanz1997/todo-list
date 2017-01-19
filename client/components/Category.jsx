@@ -63,10 +63,10 @@ class Category extends React.Component {
     return (
       <ListGroupItem
         href="#"
-        active={this.props.activeCategoryId === this.props.id
-          ? "active"
-          : "" }
-        key={this.props.key}
+        active={
+          this.props.activeCategoryId === this.props.id
+          ? "active" : ""
+        }
         onClick={this.handleCategoryClick}>
         {this.renderTools()}
         <span className="badge">{this.props.tasksCount}</span>

@@ -46,8 +46,7 @@ class Task extends React.Component {
     return (
       <li onMouseEnter={this.handleMouseEnter}
         onMouseLeave={this.handleMouseLeave}
-        className={this.props.taskData.isDone ? "done" : ""}
-        key={this.props.key}>
+        className={this.props.taskData.isDone ? "done" : ""}>
         {this.renderTaskSection()}
         {this.renderActionsSection()}
       </li>

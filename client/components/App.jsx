@@ -101,15 +101,16 @@ class App extends React.Component {
               onCategoryAdd={this.handleCategoryAdd}
               onCategoryEdit={this.handleCategoryEdit}
               onCategoryClick={this.handleCategoryClick}
-              onCategoryDelete={this.handleCategoryDelete}/>
+              onCategoryDelete={this.handleCategoryDelete}
+            />
             <TasksList
               data={this.state.data}
               activeCategoryId={this.state.activeCategoryId}
-              onCreateClick={this.openTaskModal}
               onTaskAdd={this.handleTaskAdd}
               onTaskEdit={this.handleTaskEdit}
               onTaskStatusChange={this.handleTaskStatusChange}
-              onTaskDelete={this.handleTaskDelete}/>
+              onTaskDelete={this.handleTaskDelete}
+            />
           </div>
         </div>
       </div>
